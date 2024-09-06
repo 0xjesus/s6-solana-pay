@@ -5,7 +5,7 @@
 			<!-- Logo de Luna AI -->
 			<div class="mb-3 d-flex justify-content-center align-items-center">
 				<span class="h5">0xJesus</span>
-			</div>|
+			</div>
 
 			<!-- Cuentas de redes sociales -->
 			<div class="mb-3">

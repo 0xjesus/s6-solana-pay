@@ -4,7 +4,7 @@
       <a class="navbar-brand" href="#">
         SEZ - Jupiter Transactions Workshop
       </a>
-			<span class="badge bg-warning text-dark me-2">Devnet</span>
+			<span class="badge bg-warning text-dark me-2">Mainnet</span>
 			<span class="badge bg-success">0xJesus</span>
       <button
         class="navbar-toggler"

@@ -1,7 +1,10 @@
 <template>
   <div class="container py-4">
     <h1 class="text-center mb-4">Point of Sale</h1>
-
+    <div class = "d-flex justify-content-center">
+      <a href="https://github.com/0xjesus/s6-solana-pay-frontend" class="btn btn-primary me-2">Frontend Repo</a>
+      <a href="https://github.com/0xjesus/s6-solana-pay-api" class="btn btn-primary">Backend Repo</a>
+    </div>
     <!-- Product List -->
     <div class="row mb-3">
       <div class="col-md-8">

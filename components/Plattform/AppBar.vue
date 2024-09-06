@@ -2,7 +2,7 @@
   <nav class="navbar navbar-expand-lg bg-light shadow">
     <div class="container">
       <a class="navbar-brand" href="#">
-        SEZ - Jupiter Transactions Workshop
+        S6 - Solana Pay 
       </a>
 			<span class="badge bg-warning text-dark me-2">Mainnet</span>
 			<span class="badge bg-success">0xJesus</span>

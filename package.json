@@ -11,6 +11,7 @@
   },
   "dependencies": {
     "@pinia/nuxt": "^0.5.3",
+    "@solana/pay": "^0.2.5",
     "@solana/spl-token": "^0.4.8",
     "@solana/web3.js": "^1.95.2",
     "bootstrap": "^5.3.3",

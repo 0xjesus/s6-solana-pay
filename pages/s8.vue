@@ -26,6 +26,20 @@
       </div>
     </div>
 
+    <!-- Section to Create Merkle Tree -->
+    <div class="mb-4">
+      <h3>Create Merkle Tree</h3>
+      <button @click="createMerkleTree" class="btn btn-secondary w-100 mb-3">Create Merkle Tree</button>
+
+      <!-- Display Merkle Tree Transaction Result -->
+      <div v-if="merkleTreeTransaction" class="alert alert-success">
+        Merkle Tree created successfully! Transaction:
+        <a :href="merkleTreeTransaction" target="_blank">
+          {{ merkleTreeTransaction }}
+        </a>
+      </div>
+    </div>
+
     <!-- Section to Mint Compressed NFTs -->
     <div class="mb-4">
       <h3>Mint Compressed NFTs</h3>
@@ -39,13 +53,17 @@
           <label for="wallets" class="form-label">Wallets (comma-separated)</label>
           <textarea v-model="wallets" class="form-control" id="wallets" rows="4"></textarea>
         </div>
+        <div class="mb-3">
+          <label for="nftFile" class="form-label">Upload File for NFT</label>
+          <input type="file" class="form-control" id="nftFile" ref="nftFileInput" @change="handleNFTFileChange" />
+        </div>
         <button type="submit" class="btn btn-success w-100">Mint Compressed NFTs</button>
       </form>
 
       <!-- Display Mint Transaction Result -->
       <div v-if="mintTransaction" class="alert alert-success">
         Compressed NFTs minted successfully! Transaction:
-        <a :href="'https://solscan.io/tx/' + mintTransaction" target="_blank">
+        <a :href="mintTransaction" target="_blank">
           {{ mintTransaction }}
         </a>
       </div>
@@ -56,9 +74,11 @@
 <script setup>
 import { ref } from 'vue';
 
-// Hardcoded metadata and wallets
+// State variables
 const fileInput = ref(null);
 const selectedFile = ref(null);
+const nftFileInput = ref(null);
+const selectedNFTFile = ref(null);
 const metadata = ref(`{
   "name": "S8-Fellowship",
   "symbol": "S8F",
@@ -70,51 +90,20 @@ const metadata = ref(`{
 }`);
 const collectionTransaction = ref('');
 const collectionAddress = ref('');
-const wallets = ref(`7jQFJLS3QRGJyshYkLgp4QQH8D5c9qym2LQzkhag38UD,
-8J9Hz2tfFLDhE5vcdbinCMug4xqyBCfQCoi4QYfVapEn,
-A1mq3dn2tUBfJB6WjnL4XtVQgGLGAUD3FeiMLuUQoRMu,
-HjJQdfTHgC3EBX3471w4st8BXbBmtbaMyCAXNgcUb7dq,
-BtSTqq27A7xTMaCPWEhNwdf4eHsLWiWZvhQS2ABMd1Y4,
-9riZWGcTFTLoBpmRM5xfYXCrHsxoqL4ynqBYtNxskYHV,
-H3QFot1G5Xe8wAjkQbLLt5dEYsHBsicKLHL1aSBv2H2d,
-G1ZRP9Sz87SZJ6ZdsqaK8QxbXGTwCFv1SYnheRtY63DW,
-8MgdhXTpfWp5k2m1Q2CxMkETgenkYasNqGW88nUANRkR,
-6X4G9p5kiE6tDXkBHfpqispJ2B6YfAA3tBGcKvaXaht2,
-8HWXSHAngoGE9dudeZUcvnP7xRr9Wb4gy7H8VS5GRo7N,
-9BbWp6tcX9MEGSUEpNXfspYxYsWCxE9FgRkAc3RpftkT,
-3dfxtPdadK4CdHC1HjcD6Fc2J3x3REy55RyDxAfYuf1d,
-Fhrr8gFyNAASoCM2GprrjaNahgCJyb5SVV6V5oHr72Fj,
-DVxLfD4BFF3dLUtpvDZ5jbZExjknE1m2WwH2axz2J6ge,
-3o5cfcL9VS31T9N5ZbQgLTHokpxiWbTtjoAMjUp2SNey,
-9unenHYtwUowNkWdZmSYTwzGxxdzKVJh7npk6W6uqRF3,
-3dTSLCGStegkuoU6dc75DbRdJk4rKV3d5ZCZdSWbTcQv,
-6ggGtCSpE6moyjDhQQ7MfQ8cw89DcgtYJhaKZaKJ59CQ,
-9riZWGcTFTLoBpmRM5xfYXCrHsxoqL4ynqBYtNxskYHV,
-JCsFjtj6tem9Dv83Ks4HxsL7p8GhdLtokveqW7uWjGyi,
-DH9oe9rfZWkRfBVWvib11ihrgCaYP1jGrD9fXcvhun37,
-7jQFJLS3QRGJyshYkLgp4QQH8D5c9qym2LQzkhag38UD,
-HdaKENyK8fxod85QipFYZffC82PmsM8XEW4prcZbeQiK,
-EcrHvqa5Vh4NhR3bitRZVrdcUGr1Z3o6bXHz7xgBU2FB,
-GyETGp22PjuTTiQJQ2P9oAe7oioFjJ7tbTBr1qiXZoa8,
-frae7AtwagcebTnNNFaobGH2haFUGNpFniKELbuBi2z,
-38rc27bLd73QUDKmiDBQjsmbXpxinx8metaPFsRPSCWi,
-4syk2oXfU7kgpAPAxsyBv47FHeNuVz5WGc2x8atGNDd2,
-HFJEhqTUPKKWvhwVeQS5qjSP373kMUFpNuiqMMyXZ2Gr,
-72hBoHW3TDBHH8vASheaqwVAb8ez3SJAhwtegN5UQvJ9,
-CxjawXnJxAyb7Zx3xCkSD3nxamdpcfSikvnnC7C8RMHh,
-A1mq3dn2tUBfJB6WjnL4XtVQgGLGAUD3FeiMLuUQoRMu,
-2hNdA3G3hfwUN6z28mgFTAjmkXdTvHsRiTXQP3AZjaij,
-ji1E9W3P4Yesmwcv6m5rgBs6dGnshaTcfaFoRW6qcjL,
-HT8DNntQe2ZN1v763zUqPou5wwNGTg6xBPCDg31vhjrv,
-BsdgGRzDmVTM8FBepRXrQixMZgjP6smsSbuDb1Y7VJB6`);
+const wallets = ref(`7jQFJLS3QRGJyshYkLgp4QQH8D5c9qym2LQzkhag38UD,...`);
 const mintTransaction = ref('');
+const merkleTreeTransaction = ref('');
 
-// Function to handle file input change
+// Handle file changes
 const handleFileChange = (event) => {
   selectedFile.value = event.target.files[0];
 };
 
-// Function to create a new NFT Collection
+const handleNFTFileChange = (event) => {
+  selectedNFTFile.value = event.target.files[0];
+};
+
+// Create a new NFT Collection
 const createCollection = async () => {
   try {
     if (!selectedFile.value) {
@@ -125,7 +114,7 @@ const createCollection = async () => {
     const formData = new FormData();
     formData.append('file', selectedFile.value);
     formData.append('metadata', metadata.value);
-	formData.append('fromPubKey', useSolanaStore().wallet);
+    formData.append('fromPubKey', useSolanaStore().wallet);
 
     const config = useRuntimeConfig();
     const response = await fetch(`${config.public.baseURL}/solana/create-collection`, {
@@ -136,37 +125,64 @@ const createCollection = async () => {
     if (!response.ok) throw new Error('Failed to create collection');
 
     const { data } = await response.json();
-	const txResult = await useSolanaStore().signEncodedTransaction(data.transaction);
-	collectionTransaction.value = txResult;
-	console.log(txResult);
+    const txResult = await useSolanaStore().signEncodedTransaction(data.transaction);
+    collectionTransaction.value = txResult;
+    console.log(txResult);
   } catch (error) {
     console.error('Error creating collection:', error);
     alert('Failed to create collection. Please try again.');
   }
 };
 
-// Function to mint compressed NFTs using the created collection
+// Create Merkle Tree
+const createMerkleTree = async () => {
+  try {
+    const config = useRuntimeConfig();
+    const response = await fetch(`${config.public.baseURL}/solana/create-merkle-tree`, {
+      method: 'POST',
+      headers: { 'Content-Type': 'application/json' },
+      body: JSON.stringify({ fromPubKey: useSolanaStore().wallet }),
+    });
+
+    if (!response.ok) throw new Error('Failed to create Merkle Tree');
+    const { data } = await response.json();
+	console.log("Transaction...", data.transaction);
+    const txResult = await useSolanaStore().signEncodedTransaction(data.transaction);
+    merkleTreeTransaction.value = txResult;
+    console.log(txResult);
+  } catch (error) {
+    console.error('Error creating Merkle Tree:', error);
+    alert('Failed to create Merkle Tree. Please try again.');
+  }
+};
+
+// Mint compressed NFTs
 const mintCompressedNFTs = async () => {
   try {
+    if (!selectedNFTFile.value) {
+      alert('Please select a file for NFT.');
+      return;
+    }
+
     const walletsArray = wallets.value.split(',').map((wallet) => wallet.trim());
+
+    const formData = new FormData();
+    formData.append('file', selectedNFTFile.value);
+    formData.append('fromPubKey', collectionAddress.value);
+    formData.append('wallets', JSON.stringify(walletsArray));
 
     const config = useRuntimeConfig();
     const response = await fetch(`${config.public.baseURL}/solana/mint-compressed-nfts`, {
       method: 'POST',
-      headers: { 'Content-Type': 'application/json' },
-      body: JSON.stringify({
-        fromPubKey: collectionAddress.value,
-        wallets: walletsArray,
-      }),
+      body: formData,
     });
 
     if (!response.ok) throw new Error('Failed to mint compressed NFTs');
 
     const { data } = await response.json();
     const txResult = await useSolanaStore().signEncodedTransaction(data.transaction);
-	mintTransaction.value = txResult;
-	console.log(txResult);
-
+    mintTransaction.value = txResult;
+    console.log(txResult);
   } catch (error) {
     console.error('Error minting compressed NFTs:', error);
     alert('Failed to mint NFTs. Please try again.');

@@ -20,7 +20,7 @@
       <!-- Display QR Code for Created Collection -->
       <div v-if="collectionTransaction" class="alert alert-success">
         Collection created successfully! Transaction:
-        <a :href="'https://solscan.io/tx/' + collectionTransaction" target="_blank">
+        <a :href="collectionTransaction" target="_blank">
           {{ collectionTransaction }}
         </a>
       </div>
@@ -137,7 +137,7 @@ const createCollection = async () => {
 
     const { data } = await response.json();
 	const txResult = await useSolanaStore().signEncodedTransaction(data.transaction);
-	collectionAddress.value = txResult;
+	collectionTransaction.value = txResult;
 	console.log(txResult);
   } catch (error) {
     console.error('Error creating collection:', error);

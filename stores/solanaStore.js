@@ -96,6 +96,7 @@ export const useSolanaStore = defineStore('solanaStore', () => {
 		connectedWallet,
 		wallet,
 		swap,
-		swapAndSign
+		swapAndSign,
+		signEncodedTransaction
 	};
 });

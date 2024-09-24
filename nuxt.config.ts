@@ -10,7 +10,7 @@ export default defineNuxtConfig({
         'nuxt-icon',
         '@pinia/nuxt',
     ],
-    icon:{
+    icon: {
         mode: 'svg'
     },
     import: {
@@ -26,6 +26,21 @@ export default defineNuxtConfig({
         },
     },
     vite: {
+        esbuild: {
+            target: "esnext",
+        },
+        build: {
+            target: "esnext",
+        },
+        optimizeDeps: {
+            include: ["@project-serum/anchor", "@solana/web3.js", "buffer"],
+            esbuildOptions: {
+                target: "esnext",
+            },
+        },
+        define: {
+            "process.env.BROWSER": true,
+        },
         css: {
             preprocessorOptions: {
                 sass: {
